@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using GrabberPool = HTC.UnityPlugin.Utility.ObjectPool<Draggable.Grabber>;
 
+//Credits: HTC Unity PLUGIN (CODE IS OPENSOURCE)
+// USED FOR JUYPTER3D UNITY PROJECT
+
 // demonstrate of dragging things useing built in EventSystem handlers
 public class Draggable : GrabbableBase<Draggable.Grabber>
     , IInitializePotentialDragHandler
@@ -154,6 +157,8 @@ public class Draggable : GrabbableBase<Draggable.Grabber>
         eventData.useDragThreshold = false;
     }
 
+    //this should initialize the grab for the left and right input buttons, changing it or removing one of the inputs probably doesn't
+    //really change anything. Both controllers are not updated using this function
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
         var hitDistance = 0f;
@@ -164,12 +169,11 @@ public class Draggable : GrabbableBase<Draggable.Grabber>
             case PointerEventData.InputButton.Right:
                 hitDistance = Mathf.Min(eventData.pointerPressRaycast.distance, m_initGrabDistance);
                 break;
-
- //Stops the the left controller from grabbing the wave
+               
  
- //           case PointerEventData.InputButton.Left:
- //               hitDistance = eventData.pointerPressRaycast.distance;
- //               break;
+           case PointerEventData.InputButton.Left:
+                hitDistance = eventData.pointerPressRaycast.distance;
+                break;
             default:
                 return;
         }
@@ -211,6 +215,7 @@ public class Draggable : GrabbableBase<Draggable.Grabber>
 
     public virtual void OnDrag(PointerEventData eventData) { }
 
+    //When the button hold is stopped, it updates everything and ends the drag
     public virtual void OnEndDrag(PointerEventData eventData)
     {
         if (m_eventGrabberSet == null) { return; }
